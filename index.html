@@ -7,6 +7,7 @@
     <style>
         :root {
             --primary: #1a365d;
+            --primary-color: #ec4899;
             --secondary: #2c7a7b;
             --accent: #d69e2e;
             --risk-low: #38a169;
@@ -16,6 +17,133 @@
             --text-primary: #1a202c;
             --text-secondary: #4a5568;
             --card-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+
+        /* Typography Scaling */
+        html {
+            font-size: clamp(14px, 2.5vw, 16px);
+        }
+
+        h1 { font-size: clamp(1.5rem, 4vw, 2.5rem); }
+        h2 { font-size: clamp(1.25rem, 3vw, 1.75rem); }
+        h3 { font-size: clamp(1.1rem, 2.5vw, 1.5rem); }
+
+        /* Skip Link for Accessibility */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--primary-color, #ec4899);
+            color: white;
+            padding: 8px 16px;
+            z-index: 1000;
+            transition: top 0.3s;
+            text-decoration: none;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+
+        /* Focus Styles for Accessibility */
+        a:focus, button:focus, input:focus {
+            outline: 2px solid var(--primary-color, #ec4899);
+            outline-offset: 2px;
+        }
+
+        /* Mobile Navigation */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            z-index: 1001;
+        }
+
+        .hamburger-icon {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background: var(--primary-color, #ec4899);
+            position: relative;
+            transition: background 0.3s;
+        }
+
+        .hamburger-icon::before,
+        .hamburger-icon::after {
+            content: '';
+            position: absolute;
+            width: 24px;
+            height: 2px;
+            background: var(--primary-color, #ec4899);
+            transition: transform 0.3s;
+        }
+
+        .hamburger-icon::before { top: -8px; }
+        .hamburger-icon::after { top: 8px; }
+
+        .menu-toggle[aria-expanded="true"] .hamburger-icon {
+            background: transparent;
+        }
+
+        .menu-toggle[aria-expanded="true"] .hamburger-icon::before {
+            transform: rotate(45deg) translate(5px, 6px);
+        }
+
+        .menu-toggle[aria-expanded="true"] .hamburger-icon::after {
+            transform: rotate(-45deg) translate(5px, -6px);
+        }
+
+        /* Dark Mode Styles */
+        .dark-mode {
+            --bg-color: #1a1a2e;
+            --text-color: #e5e5e5;
+            --card-bg: #2d1f3d;
+            --border-color: #4a3f5c;
+            background: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        .dark-mode nav,
+        .dark-mode .card,
+        .dark-mode section {
+            background: var(--card-bg);
+            border-color: var(--border-color);
+        }
+
+        .dark-mode table {
+            background: var(--card-bg);
+        }
+
+        .dark-mode th {
+            background: #3d2a4d;
+        }
+
+        .dark-mode td {
+            border-color: var(--border-color);
+        }
+
+        .dark-mode .alert-box {
+            background: var(--card-bg);
+            border-color: var(--border-color);
+        }
+
+        .dark-mode .genotype {
+            background: #3d2a4d;
+            color: var(--text-color);
+        }
+
+        .dark-mode .disclaimer {
+            background: #2d1f3d;
+            border-color: var(--border-color);
+        }
+
+        /* Responsive Tables */
+        .table-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin: 1rem 0;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -71,6 +199,21 @@
             transition: background 0.2s;
         }
         nav a:hover { background: var(--bg-light); }
+
+        /* Touch Targets */
+        nav a, button, .card {
+            min-height: 44px;
+            min-width: 44px;
+        }
+
+        /* Nav Controls Container */
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: auto;
+        }
+
         main { max-width: 1200px; margin: 0 auto; padding: 2rem; }
         section { margin-bottom: 3rem; }
         h2 {
@@ -163,12 +306,68 @@
         @media (max-width: 768px) {
             .header h1 { font-size: 1.8rem; }
             .meta-info { flex-direction: column; gap: 0.5rem; }
-            nav ul { flex-direction: column; align-items: center; }
-            .grid { grid-template-columns: 1fr; }
+
+            /* Mobile Navigation */
+            .menu-toggle {
+                display: block;
+            }
+
+            nav {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                flex-wrap: wrap;
+            }
+
+            nav ul {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                align-items: stretch;
+                order: 3;
+            }
+
+            nav.menu-open ul {
+                display: flex;
+            }
+
+            nav ul li {
+                width: 100%;
+            }
+
+            nav a {
+                display: block;
+                width: 100%;
+                padding: 12px 16px;
+                border-bottom: 1px solid #fce7f3;
+            }
+
+            nav ul li:last-child a {
+                border-bottom: none;
+            }
+
+            .nav-controls {
+                order: 2;
+            }
+
+            /* Card Grid Responsive */
+            .grid, [style*="grid"] {
+                grid-template-columns: 1fr !important;
+            }
+
+            /* Responsive Tables */
+            table {
+                font-size: 0.875rem;
+            }
+
+            th, td {
+                padding: 8px;
+            }
         }
     </style>
 </head>
 <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
     <header class="header">
         <h1>Maddie - Genetic Analysis Report</h1>
         <p class="subtitle">Comprehensive Pharmacogenomic & Health Risk Assessment</p>
@@ -181,6 +380,9 @@
     </header>
 
     <nav>
+        <button class="menu-toggle" aria-expanded="false" aria-label="Toggle navigation menu">
+            <span class="hamburger-icon"></span>
+        </button>
         <ul>
             <li><a href="#alerts">Critical Alerts</a></li>
             <li><a href="#medications">Medications</a></li>
@@ -197,9 +399,13 @@
             <li><a href="#womens-health">Women's Health</a></li>
             <li><a href="#actions">Action Plan</a></li>
         </ul>
+        <div class="nav-controls">
+            <input type="search" id="gene-search" placeholder="Search genes..." aria-label="Search genes" style="padding: 8px 12px; border: 1px solid #fce7f3; border-radius: 6px;">
+            <button id="dark-mode-toggle" aria-label="Toggle dark mode" style="background: none; border: 1px solid #fce7f3; border-radius: 6px; padding: 8px 12px; cursor: pointer;">🌙</button>
+        </div>
     </nav>
 
-    <main>
+    <main id="main-content">
         <div class="disclaimer">
             <strong>Medical Disclaimer:</strong> This report is for informational purposes only and does not constitute medical advice.
             Genetic variants indicate statistical associations, not diagnoses. Effect sizes are typically small - lifestyle factors often
@@ -1124,6 +1330,45 @@
             });
         </script>
     </main>
+
+    <script>
+        // Mobile menu toggle
+        const menuToggle = document.querySelector('.menu-toggle');
+        const nav = document.querySelector('nav');
+
+        if (menuToggle) {
+            menuToggle.addEventListener('click', () => {
+                const expanded = menuToggle.getAttribute('aria-expanded') === 'true';
+                menuToggle.setAttribute('aria-expanded', !expanded);
+                nav.classList.toggle('menu-open');
+            });
+        }
+
+        // Search functionality
+        const searchInput = document.getElementById('gene-search');
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                const query = e.target.value.toLowerCase();
+                document.querySelectorAll('.card, section > div, table tr').forEach(el => {
+                    const text = el.textContent.toLowerCase();
+                    if (el.tagName === 'TR' && el.querySelector('th')) return;
+                    el.style.display = text.includes(query) || query === '' ? '' : 'none';
+                });
+            });
+        }
+
+        // Dark mode toggle
+        const darkToggle = document.getElementById('dark-mode-toggle');
+        if (darkToggle) {
+            const isDark = localStorage.getItem('darkMode') === 'true';
+            if (isDark) document.body.classList.add('dark-mode');
+
+            darkToggle.addEventListener('click', () => {
+                document.body.classList.toggle('dark-mode');
+                localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+            });
+        }
+    </script>
 
     <footer>
         <p><strong>Maddie - Comprehensive Genetic Analysis Report</strong></p>
