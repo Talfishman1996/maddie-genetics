@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maddie - Comprehensive Genetic Analysis Report</title>
+    <style>
+        :root {
+            --primary: #1a365d;
+            --secondary: #2c7a7b;
+            --accent: #d69e2e;
+            --risk-low: #38a169;
+            --risk-moderate: #d69e2e;
+            --risk-elevated: #e53e3e;
+            --bg-light: #f7fafc;
+            --text-primary: #1a202c;
+            --text-secondary: #4a5568;
+            --card-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-light);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, #2d3748 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        .header h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+        .header .subtitle { opacity: 0.9; font-size: 1.1rem; }
+        .meta-info {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        nav {
+            background: white;
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--card-shadow);
+        }
+        nav ul {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.5rem;
+            list-style: none;
+        }
+        nav a {
+            color: var(--primary);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+        nav a:hover { background: var(--bg-light); }
+        main { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+        section { margin-bottom: 3rem; }
+        h2 {
+            color: var(--primary);
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid var(--secondary);
+        }
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: var(--card-shadow);
+        }
+        .card h3 {
+            color: var(--secondary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .badge-established { background: #c6f6d5; color: #22543d; }
+        .badge-likely { background: #bee3f8; color: #2a4365; }
+        .badge-emerging { background: #fefcbf; color: #744210; }
+        .badge-speculative { background: #feebc8; color: #7b341e; }
+        .badge-experimental { background: #fed7d7; color: #822727; }
+        .risk-low { border-left: 4px solid var(--risk-low); }
+        .risk-moderate { border-left: 4px solid var(--risk-moderate); }
+        .risk-elevated { border-left: 4px solid var(--risk-elevated); }
+        .genotype {
+            font-family: 'Courier New', monospace;
+            background: #edf2f7;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        .alert-box {
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        .alert-success { background: #c6f6d5; border: 1px solid #9ae6b4; }
+        .alert-warning { background: #fefcbf; border: 1px solid #f6e05e; }
+        .alert-danger { background: #fed7d7; border: 1px solid #fc8181; }
+        .alert-info { background: #bee3f8; border: 1px solid #63b3ed; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 1rem; }
+        .metric {
+            text-align: center;
+            padding: 1rem;
+        }
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+        .metric-label { color: var(--text-secondary); font-size: 0.9rem; }
+        table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+        th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid #e2e8f0; }
+        th { background: var(--bg-light); font-weight: 600; }
+        .disclaimer {
+            background: #fff5f5;
+            border: 1px solid #fc8181;
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin: 2rem 0;
+        }
+        footer {
+            background: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+        .collapsible { cursor: pointer; }
+        .collapsible::after { content: ' [+]'; font-size: 0.8rem; }
+        .collapsible.active::after { content: ' [-]'; }
+        .content { display: none; padding-top: 1rem; }
+        .content.show { display: block; }
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.8rem; }
+            .meta-info { flex-direction: column; gap: 0.5rem; }
+            nav ul { flex-direction: column; align-items: center; }
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>Maddie - Genetic Analysis Report</h1>
+        <p class="subtitle">Comprehensive Pharmacogenomic & Health Risk Assessment</p>
+        <div class="meta-info">
+            <span>676,368 SNPs Analyzed</span>
+            <span>Female</span>
+            <span>GRCh38 Assembly</span>
+            <span>Generated: January 2026</span>
+        </div>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#alerts">Critical Alerts</a></li>
+            <li><a href="#medications">Medications</a></li>
+            <li><a href="#cardiovascular">Cardiovascular</a></li>
+            <li><a href="#metabolism">Metabolism</a></li>
+            <li><a href="#diet">Diet</a></li>
+            <li><a href="#supplements">Supplements</a></li>
+            <li><a href="#methylation">Methylation</a></li>
+            <li><a href="#inflammation">Inflammation</a></li>
+            <li><a href="#athletic">Athletic</a></li>
+            <li><a href="#sleep">Sleep</a></li>
+            <li><a href="#personality">Personality</a></li>
+            <li><a href="#longevity">Longevity</a></li>
+            <li><a href="#womens-health">Women's Health</a></li>
+            <li><a href="#actions">Action Plan</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <div class="disclaimer">
+            <strong>Medical Disclaimer:</strong> This report is for informational purposes only and does not constitute medical advice.
+            Genetic variants indicate statistical associations, not diagnoses. Effect sizes are typically small - lifestyle factors often
+            matter more than genetics. Consult healthcare providers before making medical decisions. Peptide recommendations are
+            experimental research compounds, NOT FDA-approved medications.
+        </div>
+
+        <!-- CRITICAL ALERTS SECTION -->
+        <section id="alerts">
+            <h2>Critical Alerts & Key Findings</h2>
+
+            <div class="alert-box alert-success">
+                <h3>Factor V Leiden: NEGATIVE</h3>
+                <p><strong>Genotype:</strong> <span class="genotype">CC</span> at rs6025</p>
+                <p>No increased clotting risk. Hormonal contraceptives and HRT carry standard population risk - no genetic contraindication.</p>
+                <span class="badge badge-established">ESTABLISHED</span>
+            </div>
+
+            <div class="alert-box alert-success">
+                <h3>CYP2C19: Normal Metabolizer</h3>
+                <p><strong>Genotype:</strong> <span class="genotype">*1/*1</span></p>
+                <p>No clopidogrel (Plavix) concerns. Standard dosing of PPIs and SSRIs appropriate.</p>
+                <span class="badge badge-established">ESTABLISHED</span>
+            </div>
+
+            <div class="alert-box alert-danger">
+                <h3>9p21 Cardiovascular Locus: ELEVATED RISK</h3>
+                <p>Maximum genetic risk load detected across all 9 SNPs in this region.</p>
+                <p><strong>Action:</strong> Prioritize cardiovascular health - regular lipid panels, blood pressure monitoring, Mediterranean diet, and exercise.</p>
+                <span class="badge badge-established">ESTABLISHED</span>
+            </div>
+
+            <div class="alert-box alert-warning">
+                <h3>NAT2: Slow Acetylator</h3>
+                <p>Increased risk of isoniazid-induced hepatotoxicity if TB treatment needed. Also affects caffeine, some sulfonamides.</p>
+                <span class="badge badge-established">ESTABLISHED</span>
+            </div>
+
+            <div class="alert-box alert-warning">
+                <h3>MTHFR: Compound Heterozygous</h3>
+                <p><strong>Genotype:</strong> C677T heterozygous + A1298C heterozygous</p>
+                <p>~40-50% reduced enzyme activity. Consider methylated B-vitamins (methylfolate, methylcobalamin).</p>
+                <span class="badge badge-likely">LIKELY</span>
+            </div>
+
+            <div class="alert-box alert-info">
+                <h3>Lactose Intolerance: CONFIRMED</h3>
+                <p><strong>Genotype:</strong> <span class="genotype">AA</span> at rs4988235 (LCT)</p>
+                <p>Genetically lactase non-persistent. Dairy may cause GI symptoms.</p>
+                <span class="badge badge-established">ESTABLISHED</span>
+            </div>
+        </section>
+
+        <!-- PHARMACOGENOMICS SECTION -->
+        <section id="medications">
+            <h2>Pharmacogenomics - Medication Guidance</h2>
+
+            <div class="card">
+                <h3>CYP450 Metabolizer Status Summary</h3>
+                <table>
+                    <tr>
+                        <th>Enzyme</th>
+                        <th>Status</th>
+                        <th>Key Medications Affected</th>
+                        <th>Clinical Action</th>
+                    </tr>
+                    <tr>
+                        <td><strong>CYP2D6</strong></td>
+                        <td><span class="genotype">*1/*1</span> Normal</td>
+                        <td>Codeine, tramadol, tamoxifen, many antidepressants</td>
+                        <td>Standard dosing</td>
+                    </tr>
+                    <tr>
+                        <td><strong>CYP2C19</strong></td>
+                        <td><span class="genotype">*1/*1</span> Normal</td>
+                        <td>Clopidogrel, PPIs, citalopram, sertraline</td>
+                        <td>Standard dosing</td>
+                    </tr>
+                    <tr>
+                        <td><strong>CYP1A2</strong></td>
+                        <td><span class="genotype">AA</span> Fast</td>
+                        <td>Caffeine, theophylline, some antipsychotics</td>
+                        <td>May need higher doses; caffeine cleared quickly</td>
+                    </tr>
+                    <tr>
+                        <td><strong>CYP2C9</strong></td>
+                        <td>Normal</td>
+                        <td>Warfarin, NSAIDs, losartan</td>
+                        <td>Standard dosing</td>
+                    </tr>
+                    <tr>
+                        <td><strong>CYP3A4/5</strong></td>
+                        <td>Normal</td>
+                        <td>Statins, benzodiazepines, immunosuppressants</td>
+                        <td>Standard dosing</td>
+                    </tr>
+                    <tr>
+                        <td><strong>NAT2</strong></td>
+                        <td>Slow Acetylator</td>
+                        <td>Isoniazid, hydralazine, sulfonamides</td>
+                        <td>Monitor liver function if prescribed isoniazid</td>
+                    </tr>
+                </table>
+                <span class="badge badge-established">ESTABLISHED - CPIC Guidelines</span>
+            </div>
+
+            <div class="card risk-moderate">
+                <h3>OPRM1 - Opioid Receptor</h3>
+                <p><strong>Genotype:</strong> <span class="genotype">AG</span> at rs1799971 (A118G heterozygous)</p>
+                <p><strong>Implication:</strong> May require slightly higher opioid doses for adequate pain control. Reduced binding affinity at mu-opioid receptor.</p>
+                <p><strong>Action:</strong> Inform anesthesiologist before surgery. Standard starting doses appropriate, but may need titration.</p>
+                <span class="badge badge-likely">LIKELY</span>
+            </div>
+
+            <div class="card risk-low">
+                <h3>SLCO1B1 - Statin Transport</h3>
+                <p><strong>Genotype:</strong> <span class="genotype">TT</span> at rs4149056</p>
+                <p><strong>Implication:</strong> Normal statin transport. No increased risk of statin-induced myopathy.</p>
+                <p><strong>Action:</strong> Standard statin dosing if prescribed.</p>
+                <span class="badge badge-established">ESTABLISHED</span>
+            </div>
+
+            <div class="card">
+                <h3 class="collapsible">Printable Medication Card</h3>
+                <div class="content">
+                    <div style="border: 2px dashed #ccc; padding: 1rem; background: #fff;">
+                        <h4>MADDIE - PHARMACOGENOMIC SUMMARY</h4>
+                        <p><strong>CYP2D6:</strong> Normal Metabolizer - Standard dosing</p>
+                        <p><strong>CYP2C19:</strong> Normal Metabolizer - Clopidogrel effective</p>
+                        <p><strong>CYP1A2:</strong> Fast Metabolizer - May need higher caffeine/theophylline</p>
+                        <p><strong>NAT2:</strong> Slow Acetylator - Isoniazid hepatotoxicity risk</p>
+                        <p><strong>OPRM1:</strong> AG - May need opioid dose adjustment</p>
+                        <p><strong>Factor V:</strong> Negative - Hormonal contraceptives OK</p>
+                        <p style="margin-top: 1rem; font-size: 0.8rem;">Generated: January 2026 | Bring to all medical appointments</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CARDIOVASCULAR SECTION -->
+        <section id="cardiovascular">
+            <h2>Cardiovascular Health</h2>
+
+            <div class="card risk-elevated">
+                <h3>9p21 Locus - Coronary Artery Disease Risk</h3>
+                <p><strong>Finding:</strong> Maximum genetic risk load - all risk alleles present across 9 SNPs</p>
+                <p><strong>Key SNPs:</strong></p>
+                <ul>
+                    <li>rs10757274: <span class="genotype">GG</span> (risk)</li>
+                    <li>rs2383206: <span class="genotype">GG</span> (risk)</li>
+                    <li>rs10116277: <span class="genotype">GG</span> (risk)</li>
+                </ul>
+                <p><strong>Effect Size:</strong> ~1.5-2x increased CAD risk compared to those with no risk alleles</p>
+                <p><strong>Important Context:</strong> This is one of the most replicated cardiovascular GWAS findings. However, lifestyle factors (smoking, diet, exercise, blood pressure) have LARGER effects than genetics.</p>
+                <p><strong>Actions:</strong></p>
+                <ul>
+                    <li>Annual lipid panel (LDL, HDL, triglycerides, Lp(a))</li>
+                    <li>Regular blood pressure monitoring</li>
+                    <li>Mediterranean diet (especially important with this genetic profile)</li>
+                    <li>Regular aerobic exercise (150+ min/week)</li>
+                    <li>Absolutely no smoking</li>
+                    <li>Consider coronary calcium score after age 40</li>
+                </ul>
+                <span class="badge badge-established">ESTABLISHED</span>
+            </div>
+
+            <div class="card risk-low">
+                <h3>APOE - Lipid Metabolism</h3>
+                <p><strong>Status:</strong> E3/E3 (inferred from available SNPs)</p>
+                <p><strong>Implication:</strong> Most common genotype. Neutral cardiovascular and Alzheimer's risk from APOE perspective.</p>
+                <p><strong>Diet:</strong> Standard healthy diet recommendations apply. No need for aggressive saturated fat restriction beyond general guidelines.</p>
+                <span class="badge badge-established">ESTABLISHED</span>
+            </div>
+
+            <div class="card risk-low">
+                <h3>Factor V Leiden & Prothrombin</h3>
+                <p><strong>Factor V:</strong> <span class="genotype">CC</span> - Negative (no mutation)</p>
+                <p><strong>Prothrombin:</strong> Normal</p>
+                <p><strong>Implication:</strong> No inherited thrombophilia detected. Standard VTE risk.</p>
+                <p><strong>For Women:</strong> Hormonal contraceptives, pregnancy, and HRT carry population-level risks only - no genetic amplification.</p>
+                <span class="badge badge-established">ESTABLISHED</span>
+            </div>
+
+            <div class="card">
+                <h3>ACE/AGT - Blood Pressure Regulation</h3>
+                <p><strong>ACE I/D:</strong> ID heterozygous (mixed)</p>
+                <p><strong>AGT M235T:</strong> Heterozygous</p>
+                <p><strong>Implication:</strong> Moderate genetic influence on blood pressure regulation. Standard monitoring recommended.</p>
+                <p><strong>Lifestyle:</strong> DASH diet and sodium moderation may be particularly beneficial.</p>
+                <span class="badge badge-likely">LIKELY</span>
+            </div>
+
+            <div class="card">
+                <h3>NOS3 - Nitric Oxide</h3>
+                <p><strong>rs1799983 (Glu298Asp):</strong> Heterozygous GT</p>
+                <p><strong>Implication:</strong> Moderately reduced nitric oxide production. May affect endothelial function.</p>
+                <p><strong>Support:</strong> L-arginine rich foods (nuts, seeds), beetroot, regular exercise all support NO production.</p>
+                <span class="badge badge-likely">LIKELY</span>
+            </div>
+        </section>
+
+        <!-- METABOLISM SECTION -->
+        <section id="metabolism">
+            <h2>Metabolism & Weight Management</h2>
+
+            <div class="card risk-elevated">
+                <h3>FTO - Fat Mass and Obesity Associated</h3>
+                <p><strong>Genotype:</strong> <span class="genotype">AA</span> at rs9939609 (homozygous risk)</p>
+                <p><strong>Effect:</strong> ~3 kg higher average body weight; increased appetite and reduced satiety</p>
+                <p><strong>Good News:</strong> FTO risk alleles respond BETTER to interventions than average:</p>
+                <ul>
+                    <li>High-protein diets (25-30% calories) significantly improve satiety</li>
+                    <li>Exercise benefits are amplified - genetic risk can be largely overcome</li>
+                    <li>Regular physical activity nearly eliminates the FTO effect</li>
+                </ul>
+                <p><strong>Strategy:</strong> Protein-forward meals, structured eating times, regular exercise</p>
+                <span class="badge badge-established">ESTABLISHED</span>
+            </div>
+
+            <div class="card">
+                <h3>MC4R - Appetite Regulation</h3>
+                <p><strong>Status:</strong> No high-impact variants detected</p>
+                <p><strong>Implication:</strong> Normal melanocortin signaling. Appetite regulation pathways intact.</p>
+                <span class="badge badge-likely">LIKELY</span>
+            </div>
+
+            <div class="card">
+                <h3>TCF7L2 - Type 2 Diabetes Risk</h3>
+                <p><strong>Genotype:</strong> Heterozygous risk</p>
+                <p><strong>Effect:</strong> Modestly increased T2D risk (~1.4x per risk allele)</p>
+                <p><strong>Mechanism:</strong> Affects insulin secretion and incretin response</p>
+                <p><strong>Prevention:</strong> Blood sugar monitoring, limiting refined carbs, regular exercise, maintaining healthy weight all reduce risk significantly</p>
+                <span class="badge badge-established">ESTABLISHED</span>
+            </div>
+
+            <div class="card">
+                <h3>PPARG - Insulin Sensitivity</h3>
+                <p><strong>rs1801282 (Pro12Ala):</strong> CC (Pro/Pro - common variant)</p>
+                <p><strong>Implication:</strong> Standard insulin sensitivity. The Ala variant (which you don't have) is actually protective.</p>
+                <p><strong>Lifestyle:</strong> Exercise and weight management remain the most effective insulin sensitizers.</p>
+                <span class="badge badge-established">ESTABLISHED</span>
+            </div>
+        </section>
+
+        <!-- DIET SECTION -->
+        <section id="diet">
+            <h2>Personalized Nutrition</h2>
+
+            <div class="card risk-elevated">
+                <h3>LCT - Lactose Tolerance</h3>
+                <p><strong>Genotype:</strong> <span class="genotype">AA</span> at rs4988235</p>
+                <p><strong>Status:</strong> Lactase Non-Persistent (Lactose Intolerant)</p>
+                <p><strong>Recommendation:</strong></p>
+                <ul>
+                    <li>Limit or avoid dairy milk, ice cream, soft cheeses</li>
+                    <li>Hard aged cheeses (parmesan, cheddar) are usually tolerated</li>
+                    <li>Yogurt with live cultures may be tolerated</li>
+                    <li>Lactase supplements (Lactaid) before dairy if desired</li>
+                    <li>Ensure calcium from other sources (leafy greens, fortified foods, supplements)</li>
+                </ul>
+                <span class="badge badge-established">ESTABLISHED</span>
+            </div>
+
+            <div class="card risk-moderate">
+                <h3>BCMO1 - Beta-Carotene Conversion</h3>
+                <p><strong>Status:</strong> Low Converter</p>
+                <p><strong>Implication:</strong> Poor conversion of beta-carotene to active vitamin A (retinol)</p>
+                <p><strong>Recommendation:</strong></p>
+                <ul>
+                    <li>Don't rely on carrots/sweet potatoes for vitamin A</li>
+                    <li>Include preformed vitamin A sources: eggs, liver, dairy (if tolerated), fatty fish</li>
+                    <li>Consider retinyl palmitate in supplements rather than beta-carotene</li>
+                </ul>
+                <span class="badge badge-likely">LIKELY</span>
+            </div>
+
+            <div class="card">
+                <h3>FADS1/FADS2 - Omega-3 Conversion</h3>
+                <p><strong>Status:</strong> Moderate converter</p>
+                <p><strong>Implication:</strong> Can convert plant omega-3s (ALA) to EPA/DHA, but not efficiently</p>
+                <p><strong>Recommendation:</strong></p>
+                <ul>
+                    <li>Direct EPA/DHA sources preferred: fatty fish (salmon, sardines, mackerel)</li>
+                    <li>Algae-based omega-3 supplements if vegetarian</li>
+                    <li>Don't rely solely on flax/chia/walnuts for omega-3 needs</li>
+                </ul>
+                <span class="badge badge-likely">LIKELY</span>
+            </div>
+
+            <div class="card">
+                <h3>CYP1A2 - Caffeine Metabolism</h3>
+                <p><strong>Genotype:</strong> <span class="genotype">AA</span> at rs762551</p>
+                <p><strong>Status:</strong> Fast Caffeine Metabolizer</p>
+                <p><strong>Implication:</strong></p>
+                <ul>
+                    <li>Caffeine cleared quickly - may need more for effect</li>
+                    <li>Coffee associated with REDUCED cardiovascular risk in fast metabolizers</li>
+                    <li>Can enjoy moderate coffee consumption (3-4 cups) without elevated heart risk</li>
+                    <li>Good ergogenic aid for exercise - take 30-60 min before workout</li>
+                </ul>
+                <span class="badge badge-established">ESTABLISHED</span>
+            </div>
+
+            <div class="card">
+                <h3>Personalized Diet Framework</h3>
+                <p>Based on your genetic profile, a <strong>Modified Mediterranean Diet</strong> is recommended:</p>
+                <table>
+                    <tr>
+                        <th>Emphasize</th>
+                        <th>Limit</th>
+                        <th>Avoid/Modify</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <ul>
+                                <li>Fatty fish 3x/week</li>
+                                <li>Olive oil as primary fat</li>
+                                <li>Leafy greens (calcium)</li>
+                                <li>High-protein meals</li>
+                                <li>Eggs (vitamin A)</li>
+                                <li>Nuts and seeds</li>
+                            </ul>
+                        </td>
+                        <td>
+                            <ul>
+                                <li>Refined carbohydrates</li>
+                                <li>Added sugars</li>
+                                <li>Processed foods</li>
+                                <li>Sodium (BP support)</li>
+                            </ul>
+                        </td>
+                        <td>
+                            <ul>
+                                <li>Dairy milk (lactose)</li>
+                                <li>Ice cream (lactose)</li>
+                                <li>Soft cheeses</li>
+                                <li>Beta-carotene as sole vit A</li>
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+
+        <!-- SUPPLEMENTS SECTION -->
+        <section id="supplements">
+            <h2>Supplement Protocol</h2>
+
+            <div class="card">
+                <h3>Tier 1: Essential (Strong Genetic Evidence)</h3>
+                <table>
+                    <tr>
+                        <th>Supplement</th>
+                        <th>Genetic Basis</th>
+                        <th>Recommended Form</th>
+                        <th>Dose</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Methylfolate</strong></td>
+                        <td>MTHFR compound heterozygous</td>
+                        <td>L-5-MTHF (Quatrefolic)</td>
+                        <td>400-800 mcg/day</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Methylcobalamin</strong></td>
+                        <td>MTHFR support + FUT2</td>
+                        <td>Methylcobalamin or Adenosylcobalamin</td>
+                        <td>1000 mcg/day</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Vitamin D3</strong></td>
+                        <td>VDR variants</td>
+                        <td>Cholecalciferol with K2</td>
+                        <td>2000-4000 IU/day (test levels)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>EPA/DHA Omega-3</strong></td>
+                        <td>FADS1/2 moderate converter</td>
+                        <td>Triglyceride form fish oil or algae</td>
+                        <td>1-2g EPA+DHA/day</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Calcium</strong></td>
+                        <td>Lactose intolerance (LCT)</td>
+                        <td>Calcium citrate</td>
+                        <td>500-600mg/day with meals</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Vitamin A</strong></td>
+                        <td>BCMO1 low converter</td>
+                        <td>Retinyl palmitate (NOT beta-carotene)</td>
+                        <td>2500-5000 IU/day</td>
+                    </tr>
+                </table>
+                <span class="badge badge-likely">LIKELY BENEFICIAL</span>
+            </div>
+
+            <div class="card">
+                <h3>Tier 2: Recommended (Moderate Evidence)</h3>
+                <table>
+                    <tr>
+                        <th>Supplement</th>
+                        <th>Rationale</th>
+                        <th>Form</th>
+                    </tr>
+                    <tr>
+                        <td>Magnesium</td>
+                        <td>COMT support, cardiovascular (9p21)</td>
+                        <td>Glycinate or threonate, 200-400mg</td>
+                    </tr>
+                    <tr>
+                        <td>B6 (P5P)</td>
+                        <td>MTHFR cycle support</td>
+                        <td>Pyridoxal-5-phosphate, 25-50mg</td>
+                    </tr>
+                    <tr>
+                        <td>B2 (Riboflavin)</td>
+                        <td>MTHFR cofactor</td>
+                        <td>Riboflavin-5-phosphate, 25mg</td>
+                    </tr>
+                    <tr>
+                        <td>CoQ10</td>
+                        <td>Cardiovascular support (9p21)</td>
+                        <td>Ubiquinol, 100-200mg</td>
+                    </tr>
+                </table>
+                <span class="badge badge-emerging">EMERGING</span>
+            </div>
+
+            <div class="card">
+                <h3>Tier 3: Experimental/Frontier</h3>
+                <div class="alert-box alert-warning">
+                    <strong>Disclaimer:</strong> These are research compounds, NOT FDA-approved. Limited human safety data. Discuss with physician.
+                </div>
+                <table>
+                    <tr>
+                        <th>Compound</th>
+                        <th>Rationale</th>
+                        <th>Notes</th>
+                    </tr>
+                    <tr>
+                        <td>NMN or NR</td>
+                        <td>NAD+ precursor, longevity</td>
+                        <td>Experimental; 250-500mg</td>
+                    </tr>
+                    <tr>
+                        <td>Sulforaphane</td>
+                        <td>Nrf2 activation, detox support</td>
+                        <td>Broccoli sprout extract</td>
+                    </tr>
+                </table>
+                <span class="badge badge-experimental">EXPERIMENTAL</span>
+            </div>
+
+            <div class="card risk-moderate">
+                <h3>Supplements to AVOID</h3>
+                <ul>
+                    <li><strong>Folic Acid:</strong> Use methylfolate instead (MTHFR)</li>
+                    <li><strong>Cyanocobalamin:</strong> Use methylcobalamin (requires conversion)</li>
+                    <li><strong>High-dose beta-carotene:</strong> Poor converter - use retinol</li>
+                    <li><strong>Calcium from dairy:</strong> Lactose intolerant - use supplements</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- METHYLATION SECTION -->
+        <section id="methylation">
+            <h2>Methylation & Detoxification</h2>
+
+            <div class="card risk-moderate">
+                <h3>MTHFR Status</h3>
+                <p><strong>C677T:</strong> <span class="genotype">CT</span> Heterozygous</p>
+                <p><strong>A1298C:</strong> <span class="genotype">AC</span> Heterozygous</p>
+                <p><strong>Combined Effect:</strong> Compound heterozygous - approximately 40-50% reduced enzyme activity</p>
+                <p><strong>Clinical Note:</strong> ACMG and clinical geneticists consider MTHFR testing overused. However, supporting methylation with appropriate B-vitamins is low-risk and may help.</p>
+                <p><strong>Verification:</strong> Test homocysteine levels - if elevated (>10 umol/L), methylation support is warranted.</p>
+                <span class="badge badge-likely">LIKELY</span>
+            </div>
+
+            <div class="card">
+                <h3>COMT - Catechol-O-Methyltransferase</h3>
+                <p><strong>Genotype:</strong> <span class="genotype">AA</span> at rs4680 (Met/Met)</p>
+                <p><strong>Status:</strong> Slow COMT - "Worrier" phenotype</p>
+                <p><strong>Implication:</strong> Slower dopamine/norepinephrine/estrogen clearance</p>
+                <p><strong>Characteristics:</strong></p>
+                <ul>
+                    <li>Better sustained attention and working memory</li>
+                    <li>May be more sensitive to stress</li>
+                    <li>Estrogen clearance slower (relevant for women)</li>
+                    <li>May be more sensitive to caffeine effects despite fast CYP1A2</li>
+                </ul>
+                <p><strong>Support:</strong> Stress management, magnesium, adaptogens may help. Avoid excess catechol-containing supplements (green tea extract in high doses).</p>
+                <span class="badge badge-likely">LIKELY</span>
+            </div>
+
+            <div class="card">
+                <h3>CBS - Cystathionine Beta-Synthase</h3>
+                <p><strong>Status:</strong> No high-impact variants detected</p>
+                <p><strong>Implication:</strong> Normal transsulfuration pathway. No need to limit sulfur-containing foods.</p>
+                <span class="badge badge-likely">LIKELY</span>
+            </div>
+
+            <div class="card">
+                <h3>GST Genes - Phase II Detox</h3>
+                <p><strong>GSTM1:</strong> Present (not null)</p>
+                <p><strong>GSTT1:</strong> Present (not null)</p>
+                <p><strong>GSTP1:</strong> Normal activity</p>
+                <p><strong>Implication:</strong> Intact glutathione conjugation pathways. Normal detoxification capacity.</p>
+                <span class="badge badge-likely">LIKELY</span>
+            </div>
+
+            <div class="card">
+                <h3>SOD2 - Superoxide Dismutase</h3>
+                <p><strong>rs4880 (Ala16Val):</strong> Heterozygous</p>
+                <p><strong>Implication:</strong> Moderate mitochondrial antioxidant capacity</p>
+                <p><strong>Support:</strong> Antioxidant-rich diet, avoid excessive high-dose antioxidant supplements</p>
+                <span class="badge badge-emerging">EMERGING</span>
+            </div>
+        </section>
+
+        <!-- INFLAMMATION SECTION -->
+        <section id="inflammation">
+            <h2>Inflammation & Immune Function</h2>
+
+            <div class="card">
+                <h3>IL6 - Interleukin-6</h3>
+                <p><strong>rs1800795:</strong> Heterozygous GC</p>
+                <p><strong>Implication:</strong> Moderate inflammatory response. Not high-producer genotype.</p>
+                <span class="badge badge-emerging">EMERGING</span>
+            </div>
+
+            <div class="card">
+                <h3>TNF-alpha - Tumor Necrosis Factor</h3>
+                <p><strong>rs1800629:</strong> GG (common variant)</p>
+                <p><strong>Implication:</strong> Standard TNF-alpha production. No elevated inflammatory genotype.</p>
+                <span class="badge badge-emerging">EMERGING</span>
+            </div>
+
+            <div class="card risk-low">
+                <h3>DAO/HNMT - Histamine Metabolism</h3>
+                <p><strong>DAO (rs10156191):</strong> Normal</p>
+                <p><strong>HNMT (rs1050891):</strong> Normal</p>
+                <p><strong>Status:</strong> No histamine intolerance risk variants detected</p>
+                <p><strong>Implication:</strong> Normal histamine clearance. No need to limit histamine-rich foods.</p>
+                <span class="badge badge-likely">LIKELY</span>
+            </div>
+
+            <div class="card risk-low">
+                <h3>HLA - Celiac Disease Risk</h3>
+                <p><strong>HLA-DQ2:</strong> Not detected</p>
+                <p><strong>HLA-DQ8:</strong> Not detected</p>
+                <p><strong>Celiac Risk:</strong> Very low - nearly rules out celiac disease</p>
+                <p><strong>Note:</strong> Gluten sensitivity can still occur without these markers, but classical celiac disease is extremely unlikely.</p>
+                <span class="badge badge-established">ESTABLISHED</span>
+            </div>
+        </section>
+
+        <!-- ATHLETIC SECTION -->
+        <section id="athletic">
+            <h2>Athletic Performance</h2>
+
+            <div class="card">
+                <h3>ACTN3 - Muscle Fiber Type</h3>
+                <p><strong>Genotype:</strong> <span class="genotype">RX</span> (heterozygous)</p>
+                <p><strong>Status:</strong> Mixed muscle fiber composition</p>
+                <p><strong>Implication:</strong></p>
+                <ul>
+                    <li>Balanced between power (RR) and endurance (XX)</li>
+                    <li>Can excel at both sprint and endurance activities</li>
+                    <li>Versatile athletic potential</li>
+                </ul>
+                <p><strong>Training:</strong> Can benefit from both power and endurance training. Hybrid programs work well.</p>
+                <span class="badge badge-established">ESTABLISHED</span>
+            </div>
+
+            <div class="card risk-moderate">
+                <h3>COL1A1 - Collagen/Injury Risk</h3>
+                <p><strong>rs1800012:</strong> <span class="genotype">CA</span> (heterozygous)</p>
+                <p><strong>Status:</strong> Moderately increased soft tissue injury risk</p>
+                <p><strong>Affected:</strong> ACL, Achilles tendon, rotator cuff</p>
+                <p><strong>Prevention:</strong></p>
+                <ul>
+                    <li>Extended warm-ups before exercise</li>
+                    <li>Collagen peptides (10-15g/day with vitamin C)</li>
+                    <li>Adequate recovery between intense sessions</li>
+                    <li>Flexibility and mobility work</li>
+                    <li>Don't push through joint/tendon pain</li>
+                </ul>
+                <span class="badge badge-likely">LIKELY</span>
+            </div>
+
+            <div class="card">
+                <h3>Caffeine as Ergogenic Aid</h3>
+                <p><strong>CYP1A2:</strong> Fast metabolizer (AA)</p>
+                <p><strong>Recommendation:</strong> Caffeine is an effective performance enhancer for you:</p>
+                <ul>
+                    <li>200-400mg (2-4 cups coffee) 30-60 min before exercise</li>
+                    <li>Improves endurance, strength, and focus</li>
+                    <li>Fast metabolism means you can use it without cardiovascular concern</li>
+                    <li>May need to cycle off periodically to maintain sensitivity</li>
+                </ul>
+                <span class="badge badge-established">ESTABLISHED</span>
+            </div>
+
+            <div class="card">
+                <h3>Training Recommendations</h3>
+                <p>Based on your genetic profile:</p>
+                <table>
+                    <tr>
+                        <th>Focus Area</th>
+                        <th>Recommendation</th>
+                        <th>Genetic Basis</th>
+                    </tr>
+                    <tr>
+                        <td>Training Type</td>
+                        <td>Hybrid (strength + cardio)</td>
+                        <td>ACTN3 RX</td>
+                    </tr>
+                    <tr>
+                        <td>Recovery</td>
+                        <td>Prioritize - moderate injury risk</td>
+                        <td>COL1A1 heterozygous</td>
+                    </tr>
+                    <tr>
+                        <td>Pre-workout</td>
+                        <td>Caffeine effective</td>
+                        <td>CYP1A2 fast</td>
+                    </tr>
+                    <tr>
+                        <td>Protein</td>
+                        <td>Higher intake (1.6-2.2g/kg)</td>
+                        <td>FTO support</td>
+                    </tr>
+                    <tr>
+                        <td>Joint Support</td>
+                        <td>Collagen + vitamin C</td>
+                        <td>COL1A1</td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+
+        <!-- SLEEP SECTION -->
+        <section id="sleep">
+            <h2>Sleep & Circadian Rhythm</h2>
+
+            <div class="card">
+                <h3>CLOCK Gene</h3>
+                <p><strong>rs1801260:</strong> Heterozygous</p>
+                <p><strong>Implication:</strong> Moderate evening preference tendency</p>
+                <p><strong>Note:</strong> May naturally prefer later bedtimes; consistent sleep schedule still important.</p>
+                <span class="badge badge-emerging">EMERGING</span>
+            </div>
+
+            <div class="card">
+                <h3>PER2 - Period Circadian Clock</h3>
+                <p><strong>Status:</strong> No significant variants detected</p>
+                <p><strong>Implication:</strong> Normal circadian timing. No familial advanced/delayed sleep phase predisposition.</p>
+                <span class="badge badge-emerging">EMERGING</span>
+            </div>
+
+            <div class="card">
+                <h3>Sleep Optimization Recommendations</h3>
+                <ul>
+                    <li><strong>Timing:</strong> Allow for slightly later natural bedtime if lifestyle permits</li>
+                    <li><strong>Light exposure:</strong> Bright light in morning, dim lights evening</li>
+                    <li><strong>Caffeine:</strong> Fast metabolizer - can have afternoon coffee, but stop by 2-3pm</li>
+                    <li><strong>Magnesium:</strong> Glycinate form before bed may support sleep (COMT support)</li>
+                    <li><strong>Consistency:</strong> Regular schedule even on weekends</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- PERSONALITY SECTION -->
+        <section id="personality">
+            <h2>Personality & Neurotransmitters</h2>
+
+            <div class="disclaimer">
+                <strong>Important:</strong> Personality is ~40-50% genetic, ~50-60% environmental. These genes influence tendencies, not destinies.
+                Environment, experiences, and choices have equal or greater impact.
+            </div>
+
+            <div class="card">
+                <h3>COMT - Dopamine Clearance</h3>
+                <p><strong>Genotype:</strong> <span class="genotype">AA</span> (Met/Met)</p>
+                <p><strong>Phenotype:</strong> "Worrier" - slower dopamine clearance</p>
+                <p><strong>Tendencies:</strong></p>
+                <ul>
+                    <li>Better working memory and cognitive flexibility</li>
+                    <li>More detail-oriented and thorough</li>
+                    <li>May be more sensitive to stress</li>
+                    <li>Performs better in low-stress environments</li>
+                </ul>
+                <p><strong>Not a limitation:</strong> Many high achievers have this genotype. The key is managing stress effectively.</p>
+                <span class="badge badge-likely">LIKELY</span>
+            </div>
+
+            <div class="card">
+                <h3>DRD2/DRD4 - Dopamine Receptors</h3>
+                <p><strong>DRD2:</strong> Normal receptor density</p>
+                <p><strong>DRD4:</strong> No 7-repeat (novelty seeking) variant</p>
+                <p><strong>Implication:</strong> Standard dopamine signaling. Not predisposed to extreme novelty-seeking.</p>
+                <span class="badge badge-emerging">EMERGING</span>
+            </div>
+
+            <div class="card">
+                <h3>SLC6A4 - Serotonin Transporter</h3>
+                <p><strong>5-HTTLPR:</strong> Intermediate length</p>
+                <p><strong>Implication:</strong> Moderate serotonin reuptake. Balanced between resilience and environmental sensitivity.</p>
+                <p><strong>Note:</strong> This gene's effects are highly modified by environment and life experiences.</p>
+                <span class="badge badge-emerging">EMERGING</span>
+            </div>
+
+            <div class="card">
+                <h3>BDNF - Brain-Derived Neurotrophic Factor</h3>
+                <p><strong>rs6265 (Val66Met):</strong> Val/Val (common variant)</p>
+                <p><strong>Implication:</strong> Normal BDNF secretion and neuroplasticity</p>
+                <p><strong>Support:</strong> Exercise strongly increases BDNF regardless of genotype</p>
+                <span class="badge badge-likely">LIKELY</span>
+            </div>
+
+            <div class="card">
+                <h3>MAO-A - "Warrior Gene"</h3>
+                <p><strong>Status:</strong> Normal activity variant</p>
+                <p><strong>Implication:</strong> Standard monoamine oxidase activity. Normal degradation of serotonin, dopamine, norepinephrine.</p>
+                <p><strong>Note:</strong> The "warrior gene" label is overhyped and scientifically problematic. Effects are small and highly context-dependent.</p>
+                <span class="badge badge-emerging">EMERGING</span>
+            </div>
+        </section>
+
+        <!-- LONGEVITY SECTION -->
+        <section id="longevity">
+            <h2>Longevity & Aging</h2>
+
+            <div class="card">
+                <h3>FOXO3 - Longevity Gene</h3>
+                <p><strong>rs2802292:</strong> Heterozygous GT</p>
+                <p><strong>Status:</strong> One copy of longevity-associated allele</p>
+                <p><strong>Implication:</strong> Modest genetic contribution to longevity potential</p>
+                <p><strong>Mechanism:</strong> FOXO3 regulates stress resistance, metabolism, and cellular repair</p>
+                <span class="badge badge-likely">LIKELY</span>
+            </div>
+
+            <div class="card">
+                <h3>TERT - Telomerase</h3>
+                <p><strong>Status:</strong> No high-impact variants</p>
+                <p><strong>Implication:</strong> Normal telomere maintenance capacity</p>
+                <p><strong>Support:</strong> Lifestyle factors (exercise, stress management, sleep) strongly influence telomere length</p>
+                <span class="badge badge-emerging">EMERGING</span>
+            </div>
+
+            <div class="card">
+                <h3>APOE - Alzheimer's Risk</h3>
+                <p><strong>Status:</strong> E3/E3 (inferred)</p>
+                <p><strong>Implication:</strong> Population-average Alzheimer's risk. No E4 allele detected.</p>
+                <p><strong>Prevention:</strong> Standard brain health recommendations: exercise, sleep, social engagement, cognitive stimulation</p>
+                <span class="badge badge-established">ESTABLISHED</span>
+            </div>
+
+            <div class="card">
+                <h3>Longevity Optimization</h3>
+                <p>Based on your genetic profile, focus on:</p>
+                <ul>
+                    <li><strong>Cardiovascular:</strong> Priority given 9p21 risk - aggressive prevention</li>
+                    <li><strong>Metabolic:</strong> Maintain healthy weight (FTO requires active management)</li>
+                    <li><strong>Exercise:</strong> Both cardio and strength - supports FOXO3, counters FTO</li>
+                    <li><strong>Stress:</strong> Active management (COMT Met/Met benefits from lower stress)</li>
+                    <li><strong>Sleep:</strong> Prioritize quality sleep for cellular repair</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- WOMEN'S HEALTH SECTION -->
+        <section id="womens-health">
+            <h2>Women's Health Considerations</h2>
+
+            <div class="card risk-low">
+                <h3>Hormonal Contraceptives</h3>
+                <p><strong>Factor V Leiden:</strong> Negative - No genetic contraindication</p>
+                <p><strong>Prothrombin:</strong> Normal - No genetic contraindication</p>
+                <p><strong>Assessment:</strong> Combined hormonal contraceptives carry only standard population-level VTE risk.</p>
+                <p><strong>Note:</strong> Other non-genetic factors (smoking, obesity, age >35) should still be considered.</p>
+                <span class="badge badge-established">ESTABLISHED</span>
+            </div>
+
+            <div class="card">
+                <h3>Estrogen Metabolism</h3>
+                <p><strong>COMT (Met/Met):</strong> Slower estrogen clearance</p>
+                <p><strong>Implication:</strong> Estrogen and its metabolites may circulate longer</p>
+                <p><strong>Recommendations:</strong></p>
+                <ul>
+                    <li>Support estrogen metabolism: cruciferous vegetables (DIM, I3C)</li>
+                    <li>Adequate fiber for estrogen excretion</li>
+                    <li>Maintain healthy body composition (adipose tissue produces estrogen)</li>
+                    <li>Limit alcohol (affects estrogen metabolism)</li>
+                </ul>
+                <span class="badge badge-likely">LIKELY</span>
+            </div>
+
+            <div class="card">
+                <h3>Bone Health</h3>
+                <p><strong>VDR variants:</strong> Present - may affect vitamin D utilization</p>
+                <p><strong>Lactose intolerance:</strong> Limits dairy calcium sources</p>
+                <p><strong>Recommendations:</strong></p>
+                <ul>
+                    <li>Vitamin D3 supplementation (2000-4000 IU, test levels)</li>
+                    <li>Calcium from non-dairy sources + supplements</li>
+                    <li>Weight-bearing exercise for bone density</li>
+                    <li>Consider DEXA scan baseline if other risk factors present</li>
+                </ul>
+                <span class="badge badge-likely">LIKELY</span>
+            </div>
+
+            <div class="card">
+                <h3>Pregnancy Considerations</h3>
+                <p><strong>MTHFR:</strong> Compound heterozygous</p>
+                <p><strong>Recommendation:</strong> Use methylfolate (L-5-MTHF) instead of folic acid for prenatal supplementation</p>
+                <p><strong>Dose:</strong> At least 800 mcg methylfolate before and during pregnancy</p>
+                <p><strong>Factor V:</strong> Negative - no increased pregnancy VTE risk from this gene</p>
+                <span class="badge badge-likely">LIKELY</span>
+            </div>
+        </section>
+
+        <!-- ACTION PLAN SECTION -->
+        <section id="actions">
+            <h2>Prioritized Action Plan</h2>
+
+            <div class="card risk-elevated">
+                <h3>Priority 1: Cardiovascular Prevention (9p21 Risk)</h3>
+                <ol>
+                    <li>Schedule comprehensive lipid panel (include Lp(a), apoB)</li>
+                    <li>Establish regular blood pressure monitoring</li>
+                    <li>Adopt Mediterranean diet pattern</li>
+                    <li>Target 150+ min moderate cardio per week</li>
+                    <li>Absolutely no smoking (ever)</li>
+                    <li>Discuss coronary calcium score with doctor after age 40</li>
+                </ol>
+            </div>
+
+            <div class="card risk-moderate">
+                <h3>Priority 2: Methylation Support (MTHFR)</h3>
+                <ol>
+                    <li>Test homocysteine levels (fasting)</li>
+                    <li>Switch to methylated B-vitamins (methylfolate, methylcobalamin)</li>
+                    <li>Include riboflavin (B2) and P5P (B6) as cofactors</li>
+                    <li>Retest homocysteine in 3 months</li>
+                </ol>
+            </div>
+
+            <div class="card risk-moderate">
+                <h3>Priority 3: Weight Management (FTO)</h3>
+                <ol>
+                    <li>Adopt high-protein eating pattern (25-30% calories)</li>
+                    <li>Regular meal timing - avoid grazing</li>
+                    <li>Commit to regular exercise (both cardio and strength)</li>
+                    <li>Track progress - FTO responds well to intervention</li>
+                </ol>
+            </div>
+
+            <div class="card">
+                <h3>Priority 4: Nutritional Optimization</h3>
+                <ol>
+                    <li>Eliminate or minimize dairy (lactose intolerance)</li>
+                    <li>Ensure calcium from supplements/non-dairy sources</li>
+                    <li>Use preformed vitamin A (not beta-carotene)</li>
+                    <li>Direct omega-3 sources (fish/algae) over plant ALA</li>
+                </ol>
+            </div>
+
+            <div class="card">
+                <h3>Priority 5: Stress Management (COMT Met/Met)</h3>
+                <ol>
+                    <li>Establish regular stress management practice</li>
+                    <li>Magnesium supplementation (glycinate form)</li>
+                    <li>Prioritize sleep quality</li>
+                    <li>Consider adaptogens (ashwagandha, rhodiola)</li>
+                </ol>
+            </div>
+
+            <div class="card">
+                <h3>Medical Card - Print and Bring to Appointments</h3>
+                <div style="border: 2px solid #1a365d; padding: 1.5rem; background: white; margin-top: 1rem;">
+                    <h4 style="color: #1a365d; margin-bottom: 1rem;">MADDIE - GENETIC SUMMARY FOR HEALTHCARE PROVIDERS</h4>
+                    <table style="width: 100%;">
+                        <tr><td><strong>CYP2D6:</strong></td><td>*1/*1 Normal Metabolizer</td></tr>
+                        <tr><td><strong>CYP2C19:</strong></td><td>*1/*1 Normal Metabolizer</td></tr>
+                        <tr><td><strong>CYP1A2:</strong></td><td>AA - Fast Caffeine Metabolizer</td></tr>
+                        <tr><td><strong>NAT2:</strong></td><td>Slow Acetylator (isoniazid risk)</td></tr>
+                        <tr><td><strong>OPRM1:</strong></td><td>AG - May need opioid adjustment</td></tr>
+                        <tr><td><strong>Factor V Leiden:</strong></td><td>Negative (CC)</td></tr>
+                        <tr><td><strong>MTHFR:</strong></td><td>Compound heterozygous (C677T/A1298C)</td></tr>
+                        <tr><td><strong>SLCO1B1:</strong></td><td>TT - Normal statin metabolism</td></tr>
+                        <tr><td><strong>9p21:</strong></td><td>High-risk cardiovascular genotype</td></tr>
+                    </table>
+                    <p style="margin-top: 1rem; font-size: 0.8rem; color: #666;">Generated: January 2026 | Consumer genetic test - confirm clinically significant findings</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="limitations">
+            <h2>Limitations & What Genetics Cannot Tell You</h2>
+            <div class="card">
+                <ul>
+                    <li>Genetic variants indicate statistical associations, not certainties</li>
+                    <li>Most variants have small effect sizes (1.1-1.5x risk changes)</li>
+                    <li>Lifestyle factors often have larger effects than genetics</li>
+                    <li>Consumer genetic tests are not clinically validated for diagnosis</li>
+                    <li>Gene expression is modified by environment (epigenetics)</li>
+                    <li>Many traits are influenced by hundreds of genes, not just the ones tested</li>
+                    <li>Population frequency data may not apply equally to all ancestries</li>
+                </ul>
+            </div>
+        </section>
+
+        <script>
+            document.querySelectorAll('.collapsible').forEach(item => {
+                item.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    const content = this.nextElementSibling;
+                    content.classList.toggle('show');
+                });
+            });
+        </script>
+    </main>
+
+    <footer>
+        <p><strong>Maddie - Comprehensive Genetic Analysis Report</strong></p>
+        <p>Generated January 2026 | 676,368 SNPs Analyzed</p>
+        <p style="margin-top: 1rem; font-size: 0.85rem; opacity: 0.8;">
+            This report is for informational purposes only. Consult healthcare providers before making medical decisions.
+        </p>
+        <p style="margin-top: 0.5rem; font-size: 0.8rem; opacity: 0.7;">
+            Data Source: SelfDecode | Assembly: GRCh38 | Pipeline: 3.00
+        </p>
+    </footer>
+</body>
+</html>
